@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map [
+<!ENTITY % entities SYSTEM "inc/entities.xml.inc">
+%entities;
+]>
+<Map background-color="transparent" srs="&srs900913;" minimum-version="2.0.0">
+<Style name="power_lines">
+    <Rule>
+        <!-- &maxscale_zoom10; -->
+        <!-- &minscale_zoom16; -->
+      <LineSymbolizer stroke="#FF33AA" stroke-width="2"/>
+      <!-- <LineSymbolizer stroke="#777777" stroke-width="9"/> -->
+      <!-- <LineSymbolizer stroke="#FFFFFF" stroke-width="4"/> -->
+    </Rule>
+</Style>
+<Style name="power_nodes">
+    <Rule>
+      <PointSymbolizer file="symbols/gridmaps_power.png" width="16" height="16" type="png" /> 
+      <!-- <MarkersSymbolizer fill="darkorange" opacity=".7" width="20" height="10" stroke="orange" stroke-width="7" stroke-opacity=".2" placement="point" marker-type="ellipse"/> -->
+    </Rule>
+</Style>
+<Layer name="power_lines" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>power_lines</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way from &prefix;_line) as power_lines
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+<Layer name="power_nodes" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>power_nodes</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way, osm_id, (tags->'node_type') as node_type, (tags->'name') as name from &prefix;_point where ((tags->'node_type') is not null)) as power_nodes
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+</Map>
